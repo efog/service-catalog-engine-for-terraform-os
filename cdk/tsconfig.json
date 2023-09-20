@@ -25,7 +25,10 @@
     ]
   },
   "exclude": [
+    "**/node_modules",
+    "**/src",
     "node_modules",
+    "src",
     "cdk.out"
   ]
 }
