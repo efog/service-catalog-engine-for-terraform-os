@@ -11,8 +11,6 @@ RUN wget -O terraform_${terraform_version}_linux_amd64.zip https://releases.hash
 
 RUN unzip terraform_${terraform_version}_linux_amd64.zip
 
-RUN mv terraform /usr/bin
-
 FROM public.ecr.aws/lambda/python:3.11
 
 WORKDIR /usr/src/app
