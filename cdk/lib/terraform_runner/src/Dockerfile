@@ -32,6 +32,8 @@ RUN python3 setup.py bdist_wheel
 # Install
 RUN pip3 install dist/terraform_runner-0.1-py3-none-any.whl
 
+COPY --from=terraform_installer /usr/src/terraform/terraform /usr/bin
+
 ENTRYPOINT ["python3", "-m", "terraform_runner"]
 
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
