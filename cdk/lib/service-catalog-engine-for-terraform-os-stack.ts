@@ -12,6 +12,7 @@ import {
   SubnetType,
   PublicSubnet,
 } from "aws-cdk-lib/aws-ec2";
+import { TerraformRunnersCluster } from "./terraform_runner";
 
 export type ServiceCatalogEngineForTerraformOSStackProps = {
   serviceCatalogEndpoint: string | null;
@@ -21,31 +22,6 @@ export type ServiceCatalogEngineForTerraformOSStackProps = {
   terraformCLIVersion: string;
 };
 
-export class ServiceCatalogEngineForTerraformOSFoundationStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
-    const targetVpcId = process.env.CDK_STACK_TARGET_VPCID;
-    let targetVpc: IVpc | undefined;
-    targetVpc = Vpc.fromVpcAttributes(this, `targetVpc-${targetVpcId}`, {
-      availabilityZones: cdk.Stack.of(this).availabilityZones,
-      vpcId: targetVpcId || "",
-    });
-    this.ensureVpcHasPublicSubnets(targetVpc);
-  }
-
-  ensureVpcHasPublicSubnets(targetVpc: IVpc) {
-    let idx = 1;
-    const subnets = targetVpc.availabilityZones.map((az) => {
-      const subnet = new PublicSubnet(this, `targetVpcSubnet-${idx}`, {
-        availabilityZone: az,
-        cidrBlock: `172.31.${32 + 16 * idx}.0/20`,
-        vpcId: targetVpc.vpcId,
-      });
-      idx++;
-    });
-  }
-}
-
 export class ServiceCatalogEngineForTerraformOSStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -54,6 +30,7 @@ export class ServiceCatalogEngineForTerraformOSStack extends cdk.Stack {
     const serviceCatalogVerifySSL =
       process.env.CDK_STACK_SERVICECATALOGVERIFYSSL || false;
     const targetVpcId = process.env.CDK_STACK_TARGET_VPCID;
+    const targetVpcSubnetIds = process.env.CDK_STACK_TARGET_VPC_SUBNETIDS;
 
     const terraforCLIVersion =
       process.env.CDK_STACK_TERRAFORMCLIVERSION || "1.2.8";
@@ -61,6 +38,7 @@ export class ServiceCatalogEngineForTerraformOSStack extends cdk.Stack {
     let targetVpc: IVpc | undefined;
     targetVpc = Vpc.fromVpcAttributes(this, `targetVpc-${targetVpcId}`, {
       availabilityZones: cdk.Stack.of(this).availabilityZones,
+      privateSubnetIds: targetVpcSubnetIds && targetVpcSubnetIds.split(",") || undefined,
       vpcId: targetVpcId || "",
     });
 
@@ -90,5 +68,8 @@ export class ServiceCatalogEngineForTerraformOSStack extends cdk.Stack {
       "stateMachineLambdaFunctions",
       stackProps,
     );
+    const terraformRunnersCluster = new TerraformRunnersCluster(this, "terraformRunnersCluster", Object.assign({}, stackProps, {
+        supportedTerraformVersions: ["1.5.7", "1.5.6", "1.5.5"]
+    } ));
   }
 }
