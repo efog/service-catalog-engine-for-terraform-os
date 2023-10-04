@@ -26,14 +26,14 @@ export class TerraformRunnersCluster extends Construct {
         const executionRole = new Role(this, 'terraform_runner_executionRole', {
             assumedBy: new ServicePrincipal('ecs-tasks.amazonaws.com'),
             description: 'Terraform runner execution role',
-            path: 'TerraformEngine',
+            path: '/TerraformEngine/',
             roleName: 'terraform_runner_executionrole'
         });
         this.terraformRunnerExecutionRole = executionRole;
         const taskRole = new Role(this, 'terraform_runner_taskRole', {
             assumedBy: new ServicePrincipal('ecs-tasks.amazonaws.com'),
             description: 'Terraform runner task role',
-            path: 'TerraformEngine',
+            path: '/TerraformEngine/',
             roleName: 'terraform_runner_taskrole'
         });
         this.terraformRunnerTaskRole = taskRole;

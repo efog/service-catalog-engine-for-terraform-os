@@ -4,8 +4,7 @@ ARG terraform_version=1.5.7
 
 WORKDIR /usr/src/terraform
 
-# Download and install Terraform
-RUN yum install wget unzip -y
+RUN yum install jq wget unzip git -y
 
 RUN wget -O terraform_${terraform_version}_linux_amd64.zip https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
 
@@ -13,10 +12,15 @@ RUN unzip terraform_${terraform_version}_linux_amd64.zip
 
 FROM public.ecr.aws/lambda/python:3.11
 
+RUN yum install jq git -y
+
 WORKDIR /usr/src/app
 
 # Install Wheel
 RUN pip3 install wheel
+
+# Install boto3
+RUN pip3 install boto3
 
 # Copy files
 COPY . .
