@@ -28,7 +28,7 @@ export class TerraformOpenSourceParameterParserFunction extends Construct {
             name: 'terraformopensourceparameterparser.main',
             targetVpc: props && props.targetVpc,
             targetVpcSubnets: props && props.targetVpcSubnets
-        } as BaseFunctionProps;
+        } as unknown as BaseFunctionProps;
         this.lambdaFunction = BaseFunction.createFunction(scope, functionProps);
     }
 }

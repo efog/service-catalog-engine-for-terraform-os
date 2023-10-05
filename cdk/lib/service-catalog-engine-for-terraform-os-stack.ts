@@ -12,7 +12,7 @@ import {
     SubnetType,
     PublicSubnet
 } from 'aws-cdk-lib/aws-ec2';
-import { TerraformRunnersCluster } from './terraform_runner';
+import { TerraformRunnersCluster } from './terraform-runner';
 
 export interface ServiceCatalogEngineForTerraformOSStackProps {
     serviceCatalogEndpoint: string | null

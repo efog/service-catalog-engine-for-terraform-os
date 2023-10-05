@@ -20,6 +20,9 @@
         "@typescript-eslint/consistent-type-assertions": "off",
         "@typescript-eslint/no-unused-vars": "off",
         "@typescript-eslint/prefer-nullish-coalescing": "off",
-        "@typescript-eslint/semi": ["error","always"]
+        "@typescript-eslint/semi": ["error","always"],
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/no-extraneous-class": "off"
     }
 }
